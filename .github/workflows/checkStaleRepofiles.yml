@@ -1,0 +1,61 @@
+name: Check Stale Repository-Files
+
+on:
+#  push:
+#    branches:
+#      - master
+#  schedule:
+#    - cron: '30 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  checkStaleRepositoryFiles:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: cache node modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-js-${{ hashFiles('package-lock.json') }}
+
+      - name: install dependencies
+        run: npm install --omit=dev
+
+      #- name: check LATEST repository
+      #  run: node index.js --update-readme
+
+      - name: send alarm mail
+        uses: mikeal/publish-to-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_NAME: 'master'
+      - name: Send mail
+        uses: dawidd6/action-send-mail@v3
+        with:
+          # for ducumentation see https://github.com/marketplace/actions/send-email
+          server_address: mail.gmx.net
+          server_port: 587
+          secure: true
+          username: iobroker-bot@gmx.at
+          password: ${{secrets.IOBBOT_GMXMAIL}}
+          subject: Github Actions job result
+          to: iobroker-bot@gmx.at
+          from: ioBroker Bot
+          body: Build job of ${{github.repository}} completed successfully!
+          ## html_body: file://README.html
+          ## cc: kyloren@example.com,leia@example.com
+          ## bcc: r2d2@example.com,hansolo@example.com
+          ## reply_to: luke@example.com
+          ## convert_markdown: true
+          ## attachments: attachments.zip,git.diff,./dist/static/*.js
+          ## priority: low
+          ## nodemailerlog: false
+          ## nodemailerdebug: false

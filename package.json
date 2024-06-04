@@ -1,0 +1,24 @@
+{
+  "name": "@iobroker-bot-orga/watch-repositories",
+  "version": "1.0.0",
+  "description": "Workflows to check ioBroker repositories",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js --update-readme",
+    "check-npm-permissions": "node index.js --check-npm-permissions"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iobroker-bot-orga/watch-repositories.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/github.com/iobroker-bot-orga/watch-repositories/issues"
+  },
+  "homepage": "https://github.com/github.com/iobroker-bot-orga/watch-repositories#readme",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "mustache": "^4.2.0"
+  }
+}
