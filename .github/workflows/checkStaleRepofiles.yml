@@ -32,11 +32,12 @@ jobs:
       #- name: check LATEST repository
       #  run: node index.js --update-readme
 
-      - name: send alarm mail
-        uses: mikeal/publish-to-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH_NAME: 'master'
+      #- name: send alarm mail
+      #  uses: mikeal/publish-to-github-action@master
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #    BRANCH_NAME: 'main'
+      
       - name: Send mail
         uses: dawidd6/action-send-mail@v3
         with:
