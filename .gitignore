@@ -3,6 +3,13 @@
 !.vscode/
 !.github/
 
-*.code-workspace
+# No dot-files
+.*
+
 node_modules
 nbproject
+
+# npm package files
+iobroker.*.tgz
+
+Thumbs.db
