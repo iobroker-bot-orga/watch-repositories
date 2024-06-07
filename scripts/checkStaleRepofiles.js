@@ -11,7 +11,7 @@ function hhmmStr( min ) {
 
     const hh = Math.floor( min/60 );
     const mm = Math.floor( min - hh*60 );
-    return ("00" + hh).slice(-2) + ':' + ("00" + min).slice(-2);
+    return ('00' + hh).slice(-2) + ':' + ('00' + mm).slice(-2);
 }
 
 async function exec() {
