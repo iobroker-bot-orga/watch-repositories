@@ -32,12 +32,6 @@ jobs:
       - name: check LATEST repository
         run: node scripts/checkStaleRepofiles.js
 
-      - name: send alarm mail
-        uses: mikeal/publish-to-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH_NAME: 'main'
-
       - name: Send mail
         uses: dawidd6/action-send-mail@v3
         with:
@@ -55,7 +49,7 @@ jobs:
           ## cc: kyloren@example.com,leia@example.com
           ## bcc: r2d2@example.com,hansolo@example.com
           ## reply_to: luke@example.com
-          ## convert_markdown: true
+          convert_markdown: true
           ## attachments: attachments.zip,git.diff,./dist/static/*.js
           ## priority: low
           ## nodemailerlog: false
