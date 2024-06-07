@@ -32,7 +32,7 @@ jobs:
       - name: check repositories
         run: node scripts/checkStaleRepofiles.js
 
-      - name: check subject file
+      - name: output subject file
         run: cat .checkStaleRepofiles_subject.txt
 
       - name: Read subject file
@@ -40,7 +40,7 @@ jobs:
         run: echo "subject=$(cat .checkStaleRepofiles_subject.txt)" >> $GITHUB_OUTPUT
         
       - name: check subject file
-        run: echo ${{ needs.EnvSetup.outputs.subject }}
+        run: echo ${{ env.subject }}
 
       - name: Send mail
         uses: dawidd6/action-send-mail@v3
@@ -51,7 +51,7 @@ jobs:
           secure: true
           username: iobroker-bot@gmx.at
           password: ${{secrets.IOBBOT_GMXMAIL}}
-          subject: ${{ needs.EnvSetup.outputs.subject }}
+          subject: ${{env.subject}}
           to: iobroker-bot@gmx.at
           from: ioBroker Bot
           ## body: Build job of ${{github.repository}} completed successfully!
