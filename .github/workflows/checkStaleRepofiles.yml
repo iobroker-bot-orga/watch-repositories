@@ -36,7 +36,7 @@ jobs:
         id: getsubject
         run: echo "::set-output name=subject::$(cat .checkStaleRepositoryfiles_subject.txt)"
         
-        - name: Send mail
+      - name: Send mail
         uses: dawidd6/action-send-mail@v3
         with:
           # for ducumentation see https://github.com/marketplace/actions/send-email
