@@ -45,7 +45,7 @@ jobs:
           secure: true
           username: iobroker-bot@gmx.at
           password: ${{secrets.IOBBOT_GMXMAIL}}
-          subject: ${{ steps.getsubject.outputs.subject }}
+          subject: ${{steps.getsubject.outputs.subject}}
           to: iobroker-bot@gmx.at
           from: ioBroker Bot
           ## body: Build job of ${{github.repository}} completed successfully!
