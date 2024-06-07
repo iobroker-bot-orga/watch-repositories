@@ -29,10 +29,14 @@ jobs:
       - name: install dependencies
         run: npm install --omit=dev
 
-      - name: check LATEST repository
+      - name: check repositories
         run: node scripts/checkStaleRepofiles.js
 
-      - name: Send mail
+      - name: Read subject file
+        id: getsubject
+        run: echo "::set-output name=subject::$(cat .checkStaleRepositoryfiles_subject.txt)"
+        
+        - name: Send mail
         uses: dawidd6/action-send-mail@v3
         with:
           # for ducumentation see https://github.com/marketplace/actions/send-email
@@ -41,7 +45,7 @@ jobs:
           secure: true
           username: iobroker-bot@gmx.at
           password: ${{secrets.IOBBOT_GMXMAIL}}
-          subject: Github Actions job result
+          subject: ${{ steps.getsubject.outputs.subject }}
           to: iobroker-bot@gmx.at
           from: ioBroker Bot
           ## body: Build job of ${{github.repository}} completed successfully!
