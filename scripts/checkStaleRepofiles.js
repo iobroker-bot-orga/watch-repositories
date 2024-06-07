@@ -22,7 +22,7 @@ async function exec() {
     console.log (`latestTime: ${latestDate.toString()} - ${latestDiff} minutes old`);
 
     const stableRepo = await iobroker.getStableRepoLive();
-    const stableTimeStr = latestRepo._repoInfo?.repoTime;
+    const stableTimeStr = stableRepo._repoInfo?.repoTime;
     const stableTime = Date.parse(stableTimeStr);
     const stableDate = new Date(stableTime);
     const stableDiff = (nowTime-stableTime) / 1000 / 60;
@@ -32,34 +32,34 @@ async function exec() {
     let body = '';
 
     if ((latestDiff > limit) || (stableDiff > limit)) {
-        subject = `[iob-bot] ERROR - Repository data outdated`
+        subject = `[iob-bot] ERROR - Repository data outdated`;
         body = `ioBroker repository watchjob detected the following problems:\n` +
             `last update of LATEST repository was done at ${latestDate.toString} (${latestDiff} minutes ago)\n` +
             `last update of STABLE repository was done at ${stableDate.toString} (${stableDiff} minutes ago)\n`;
         console.log (`\nERROR: repository data is stale\n`);
     } else{
-        subject = `[iob-bot] OK - Repository data up to date`
+        subject = `[iob-bot] OK - Repository data up to date`;
         body = `ioBroker repository watchjob result:\n` +
             `last update of LATEST repository was done at ${latestDate.toString} (${latestDiff} minutes ago)\n` +
-            `last update of STABLE repository was done at ${stableDate.toString} (${stableDiff} minutes ago)\n`;    
+            `last update of STABLE repository was done at ${stableDate.toString} (${stableDiff} minutes ago)\n`;
         console.log (`\nOK: everything seems to be fine.\n`);
     }
 
-    body = body + 
+    body = body +
         `\n`+
         `This mail was created by @iobroker-bot`;
 
     fs.writeFile('.checkStaleRepofiles_subject.txt', subject, err => {
         if (err) {
-          console.error(err);
-        };
+            console.error(err);
+        }
     });
 
     fs.writeFile('.checkStaleRepofiles_body.md', body, err => {
         if (err) {
-          console.error(err);
-        };
+            console.error(err);
+        }
     });
 
 }
-exec()
+exec();
