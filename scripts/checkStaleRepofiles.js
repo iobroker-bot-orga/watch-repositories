@@ -49,13 +49,13 @@ async function exec() {
         `\n`+
         `This mail was created by @iobroker-bot`;
 
-    fs.writeFile('_mail_subject.txt', subject, err => {
+    fs.writeFile('.checkStaleRepofiles_subject.txt', subject, err => {
         if (err) {
           console.error(err);
         };
     });
 
-    fs.writeFile('_mail_body.md', body, err => {
+    fs.writeFile('.checkStaleRepofiles_body.md', body, err => {
         if (err) {
           console.error(err);
         };

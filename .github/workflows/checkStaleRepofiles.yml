@@ -29,14 +29,14 @@ jobs:
       - name: install dependencies
         run: npm install --omit=dev
 
-      #- name: check LATEST repository
-      #  run: node index.js --update-readme
+      - name: check LATEST repository
+        run: node scripts/checkStaleRepofiles.js
 
-      #- name: send alarm mail
-      #  uses: mikeal/publish-to-github-action@master
-      #  env:
-      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #    BRANCH_NAME: 'main'
+      - name: send alarm mail
+        uses: mikeal/publish-to-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_NAME: 'main'
 
       - name: Send mail
         uses: dawidd6/action-send-mail@v3
@@ -50,8 +50,8 @@ jobs:
           subject: Github Actions job result
           to: iobroker-bot@gmx.at
           from: ioBroker Bot
-          body: Build job of ${{github.repository}} completed successfully!
-          ## html_body: file://README.html
+          ## body: Build job of ${{github.repository}} completed successfully!
+          html_body: file://.checkStaleRepofiles_body.md
           ## cc: kyloren@example.com,leia@example.com
           ## bcc: r2d2@example.com,hansolo@example.com
           ## reply_to: luke@example.com
