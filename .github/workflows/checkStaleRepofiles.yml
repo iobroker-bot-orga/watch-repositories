@@ -33,7 +33,7 @@ jobs:
         run: node scripts/checkStaleRepofiles.js
 
       - name: check subject file
-        run: cat .checkStaleRepoiles_subject.txt
+        run: cat .checkStaleRepofiles_subject.txt
 
       - name: Read subject file
         id: getsubject
