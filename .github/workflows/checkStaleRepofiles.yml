@@ -40,7 +40,7 @@ jobs:
         run: echo "subject=$(cat .checkStaleRepofiles_subject.txt)" >> $GITHUB_OUTPUT
         
       - name: check subject file
-        run: echo ${{ env.subject }}
+        run: echo ${{steps.getsubject.outputs.subject}}
 
       - name: Send mail
         uses: dawidd6/action-send-mail@v3
@@ -51,7 +51,7 @@ jobs:
           secure: true
           username: iobroker-bot@gmx.at
           password: ${{secrets.IOBBOT_GMXMAIL}}
-          subject: ${{env.subject}}
+          subject: echo ${{steps.getsubject.outputs.subject}}
           to: iobroker-bot@gmx.at
           from: ioBroker Bot
           ## body: Build job of ${{github.repository}} completed successfully!
