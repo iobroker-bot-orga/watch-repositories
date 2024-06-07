@@ -33,11 +33,11 @@ jobs:
         run: node scripts/checkStaleRepofiles.js
 
       - name: check subject file
-        run: cat .checkStaleRepositoryfiles_subject.txt
+        run: cat .checkStaleRepoiles_subject.txt
 
       - name: Read subject file
         id: getsubject
-        run: echo "subject=$(cat .checkStaleRepositoryfiles_subject.txt)" >> $GITHUB_OUTPUT
+        run: echo "subject=$(cat .checkStaleRepofiles_subject.txt)" >> $GITHUB_OUTPUT
         
       - name: check subject file
         run: echo ${{ needs.EnvSetup.outputs.subject }}
