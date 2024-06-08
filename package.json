@@ -16,7 +16,7 @@
     "node": ">= 18"
   },
   "dependencies": {
-    "@iobroker-bot-orga/iobroker-lib": "^0.0.1-alpha.0"
+    "@iobroker-bot-orga/iobroker-lib": "^1.0.1"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.7.0",
