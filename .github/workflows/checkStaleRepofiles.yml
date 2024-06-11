@@ -54,7 +54,7 @@ jobs:
           from: ioBroker Bot
           ## body: Build job of ${{github.repository}} completed successfully!
           html_body: file://.checkStaleRepofiles_body.md
-          ## cc: kyloren@example.com,leia@example.com
+          cc: github@fischer-ka.de
           ## bcc: r2d2@example.com,hansolo@example.com
           ## reply_to: luke@example.com
           convert_markdown: true
