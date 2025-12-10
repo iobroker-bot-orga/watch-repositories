@@ -71,6 +71,7 @@ async function exec() {
     });
 
     // Send Telegram notification only on error
+    isError=true;
     if (isError) {
         const botToken = process.env.TELEGRAM_BOT_TOKEN;
         const chatId = process.env.TELEGRAM_CHAT_ID;
