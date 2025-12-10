@@ -93,6 +93,6 @@ jobs:
             
             ${{ steps.getsubject.outputs.subject }}
             
-            Repository data is outdated. Please check the email for details or visit the GitHub Actions logs.
+            An error has been detected. Please check the email for details or visit the GitHub Actions logs.
             
             Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
