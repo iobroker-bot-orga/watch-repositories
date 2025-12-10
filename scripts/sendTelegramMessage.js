@@ -44,7 +44,7 @@ async function sendTelegramMessage(botToken, chatId, message) {
             });
 
             res.on('end', () => {
-                if (res.statusCode === 200) {
+                if (res.statusCode >= 200 && res.statusCode < 300) {
                     console.log('Telegram message sent successfully');
                     resolve();
                 } else {
