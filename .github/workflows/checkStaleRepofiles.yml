@@ -1,5 +1,41 @@
 name: Check Stale Repository-Files
 
+# This workflow checks if ioBroker repository files are up to date
+# and sends notifications via email and Telegram (on errors only)
+#
+# === TELEGRAM BOT SETUP INSTRUCTIONS ===
+# To receive Telegram notifications when repository data is outdated:
+#
+# 1. Create a Telegram Bot:
+#    - Open Telegram and search for @BotFather
+#    - Send /newbot command
+#    - Follow instructions to create your bot
+#    - Save the bot token (format: 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11)
+#
+# 2. Create or Use Existing Telegram Group:
+#    - Create a group named "ioBroker Repositories-Core" or use existing one
+#    - Add your bot to this group as a member
+#
+# 3. Get the Chat ID:
+#    - Add @RawDataBot to your group temporarily
+#    - The bot will send you the chat ID (format: -1001234567890 for groups)
+#    - Remove @RawDataBot from the group after getting the ID
+#    - Alternative: Send a message in the group, then visit:
+#      https://api.telegram.org/bot<YourBOTToken>/getUpdates
+#      Look for "chat":{"id":-1001234567890,...
+#
+# 4. Add Secrets to GitHub Repository:
+#    - Go to GitHub repository Settings > Secrets and variables > Actions
+#    - Add new repository secret: TELEGRAM_BOT_TOKEN with your bot token
+#    - Add new repository secret: TELEGRAM_CHAT_ID with your chat ID
+#
+# 5. Test the Setup:
+#    - Manually trigger this workflow from the Actions tab
+#    - Check if the bot sends a message to your group when there's an error
+#
+# Note: Telegram messages are sent ONLY when repository data is outdated (error condition).
+# No messages are sent when everything is working correctly.
+
 on:
 #  push:
 #    branches:
@@ -32,6 +68,9 @@ jobs:
 
       - name: check repositories
         run: node scripts/checkStaleRepofiles.js
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
       - name: check output files
         run: cat .checkStaleRepofiles_*.*

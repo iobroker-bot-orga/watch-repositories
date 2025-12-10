@@ -6,6 +6,7 @@
 const fs = require('node:fs');
 //const github = require('../lib/githubTools.js');
 const iobroker = require('@iobroker-bot-orga/iobbot-lib');
+const { sendTelegramMessage } = require('./sendTelegramMessage.js');
 
 function hhmmStr(min) {
     const hh = Math.floor(min / 60);
@@ -36,8 +37,10 @@ async function exec() {
 
     let subject = '';
     let body = '';
+    let isError = false;
 
     if (latestDiff > limit || stableDiff > limit) {
+        isError = true;
         subject = `[iob-bot] ERROR - Repository data outdated`;
         body =
             `ioBroker repository watchjob detected the following problems:\n\n` +
@@ -66,5 +69,35 @@ async function exec() {
             console.error(err);
         }
     });
+
+    // Send Telegram notification only on error
+    if (isError) {
+        const botToken = process.env.TELEGRAM_BOT_TOKEN;
+        const chatId = process.env.TELEGRAM_CHAT_ID;
+
+        if (botToken && chatId) {
+            try {
+                // Format message for Telegram
+                const telegramMessage =
+                    `🚨 *ioBroker Repository Alert*\n\n` +
+                    `Repository data is outdated!\n\n` +
+                    `📦 *LATEST Repository:*\n` +
+                    `Last update: ${latestDate.toISOString()}\n` +
+                    `Age: ${hhmmStr(latestDiff)}\n\n` +
+                    `📦 *STABLE Repository:*\n` +
+                    `Last update: ${stableDate.toISOString()}\n` +
+                    `Age: ${hhmmStr(stableDiff)}\n\n` +
+                    `⚠️ Please check the repository update process.`;
+
+                await sendTelegramMessage(botToken, chatId, telegramMessage);
+                console.log('Telegram notification sent successfully');
+            } catch (error) {
+                console.error('Failed to send Telegram notification:', error);
+                // Don't fail the workflow if Telegram notification fails
+            }
+        } else {
+            console.log('Telegram credentials not configured, skipping notification');
+        }
+    }
 }
 exec();
