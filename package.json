@@ -13,7 +13,7 @@
     "url": "https://github.com/iobroker-bot-orga/watch-repositories.git"
   },
   "engines": {
-    "node": ">= 18"
+    "node": ">= 22"
   },
   "dependencies": {
     "@iobroker-bot-orga/iobroker-lib": "^1.0.1"
