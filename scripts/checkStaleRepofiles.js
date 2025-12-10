@@ -36,6 +36,7 @@ async function exec() {
 
     let subject = '';
     let body = '';
+    let hasError = false;
 
     if (latestDiff > limit || stableDiff > limit) {
         subject = `[iob-bot] ERROR - Repository data outdated`;
@@ -44,6 +45,7 @@ async function exec() {
             `last update of LATEST repository was done at ${latestDate.toString()} (${hhmmStr(latestDiff)} ago)  \n` +
             `last update of STABLE repository was done at ${stableDate.toString()} (${hhmmStr(stableDiff)} ago)  \n`;
         console.log(`\nERROR: repository data is stale\n`);
+        hasError = true;
     } else {
         subject = `[iob-bot] OK - Repository data up to date`;
         body =
@@ -62,6 +64,12 @@ async function exec() {
     });
 
     fs.writeFile('.checkStaleRepofiles_body.md', body, err => {
+        if (err) {
+            console.error(err);
+        }
+    });
+
+    fs.writeFile('.checkStaleRepofiles_error.txt', hasError ? 'true' : 'false', err => {
         if (err) {
             console.error(err);
         }

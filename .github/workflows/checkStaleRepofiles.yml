@@ -39,6 +39,10 @@ jobs:
       - name: Read subject file
         id: getsubject
         run: echo "subject=$(cat .checkStaleRepofiles_subject.txt)" >> $GITHUB_OUTPUT
+
+      - name: Read error status
+        id: geterror
+        run: echo "haserror=$(cat .checkStaleRepofiles_error.txt)" >> $GITHUB_OUTPUT
         
       - name: Send mail
         uses: dawidd6/action-send-mail@v6
@@ -62,3 +66,33 @@ jobs:
           ## priority: low
           ## nodemailerlog: false
           ## nodemailerdebug: false
+
+      # WhatsApp notification - only sent on error
+      # To receive WhatsApp messages, the following setup is required:
+      # 1. Create a WhatsApp Business Account and get API credentials
+      # 2. Add the following secrets to the repository:
+      #    - WHATSAPP_API_URL: The WhatsApp Business API endpoint URL
+      #    - WHATSAPP_TOKEN: Authentication token for the WhatsApp Business API
+      #    - WHATSAPP_PHONE_NUMBER_ID: Your WhatsApp Business phone number ID
+      # 3. Get the WhatsApp Group ID for 'ioBroker Repositories-Core':
+      #    - Add your business number to the group
+      #    - Use WhatsApp Business API to retrieve the group ID
+      #    - Add WHATSAPP_GROUP_ID secret with the group ID
+      # 4. Ensure the WhatsApp Business account has permission to send messages to groups
+      # For more information, see: https://developers.facebook.com/docs/whatsapp/cloud-api/
+      - name: Send WhatsApp notification on error
+        if: steps.geterror.outputs.haserror == 'true'
+        uses: loki315zx/whatsapp-github-action@v1
+        with:
+          whatsapp-api-url: ${{ secrets.WHATSAPP_API_URL }}
+          whatsapp-token: ${{ secrets.WHATSAPP_TOKEN }}
+          whatsapp-phone-number-id: ${{ secrets.WHATSAPP_PHONE_NUMBER_ID }}
+          whatsapp-recipient: ${{ secrets.WHATSAPP_GROUP_ID }}
+          whatsapp-message: |
+            🚨 *ioBroker Repository Alert*
+            
+            ${{ steps.getsubject.outputs.subject }}
+            
+            Repository data is outdated. Please check the email for details or visit the GitHub Actions logs.
+            
+            Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
