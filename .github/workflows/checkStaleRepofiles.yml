@@ -80,7 +80,7 @@ jobs:
         run: echo "subject=$(cat .checkStaleRepofiles_subject.txt)" >> $GITHUB_OUTPUT
         
       - name: Send mail
-        uses: dawidd6/action-send-mail@v6
+        uses: dawidd6/action-send-mail@v7
         with:
           # for ducumentation see https://github.com/marketplace/actions/send-email
           server_address: mail.gmx.net
