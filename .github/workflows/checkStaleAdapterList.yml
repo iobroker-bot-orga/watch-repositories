@@ -1,4 +1,4 @@
-name: Check stale Adapter List
+name: Check Stale Adapter List
 
 # This workflow checks if the ioBroker adapter list (https://download.iobroker.net/list.html)
 # is up to date and sends notifications via email and Telegram (on errors only)
@@ -46,7 +46,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  checkAdapterList:
+  checkStaleAdapterList:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -66,7 +66,7 @@ jobs:
       - name: install dependencies
         run: npm install --omit=dev
 
-      - name: check adapter list
+      - name: check stale adapter list
         run: node scripts/checkStaleAdapterList.js
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
