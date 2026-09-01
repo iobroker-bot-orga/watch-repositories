@@ -22,7 +22,7 @@
     "@alcalzone/release-script": "^5.0.0",
     "@alcalzone/release-script-plugin-license": "^4.0.0",
     "@alcalzone/release-script-plugin-manual-review": "^4.0.0",
-    "@iobroker/eslint-config": "^2.0.5",
+    "@iobroker/eslint-config": "^2.3.4",
     "@tsconfig/node18": "^18.2.6",
     "@types/node": "^25.0.3",
     "typescript": "~5.9.3"
