@@ -83,7 +83,7 @@ async function exec() {
             (listDate ? `retrieved timestamp: ${listDate.toString()}  \n` : `retrieved timestamp: (none)  \n`);
         console.log(`\nERROR: adapter list is stale or unavailable\n`);
     } else {
-        subject = `[iob-bot] OK - Adapter list up to date`;
+        subject = `[iob-bot] OK - Adapter list is up to date`;
         body =
             `ioBroker adapter list watchjob result:\n\n` +
             `adapter list was last updated at ${listDate.toString()} (${hhmmStr(listDiff)} ago)  \n` +
