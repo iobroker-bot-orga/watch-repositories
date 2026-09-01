@@ -14,6 +14,29 @@ function hhmmStr(min) {
     return `${`00${hh}`.slice(-2)}:${`00${mm}`.slice(-2)}`;
 }
 
+// The timestamp displayed on the list page (e.g. "28.08 01:57") is given in
+// the server's local time (Europe/Berlin, CET/CEST). This converts such a
+// wall-clock time into a real UTC-based Date, accounting for the DST offset.
+function berlinWallTimeToDate(year, month, day, hour, minute) {
+    // Interpret the wall time as if it were UTC ...
+    const utcGuess = Date.UTC(year, month - 1, day, hour, minute);
+    // ... then find how far Europe/Berlin is from UTC at that instant.
+    const berlinParts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Europe/Berlin',
+        hour12: false,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+    }).formatToParts(new Date(utcGuess));
+    const p = Object.fromEntries(berlinParts.filter(x => x.type !== 'literal').map(x => [x.type, x.value]));
+    const berlinAsIfUtc = Date.UTC(p.year, p.month - 1, p.day, p.hour % 24, p.minute, p.second);
+    const offset = berlinAsIfUtc - utcGuess;
+    return new Date(utcGuess - offset);
+}
+
 async function exec() {
     const limit = 24 * 60; /* 24h max in minutes */
 
@@ -46,14 +69,15 @@ async function exec() {
         const hour = parseInt(match[3], 10);
         const minute = parseInt(match[4], 10);
 
-        // Construct the complete timestamp by adding the current year to the day.month value
+        // Construct the complete timestamp by adding the current year to the day.month
+        // value. The page time is in server-local time (Europe/Berlin, CET/CEST).
         let year = nowDate.getUTCFullYear();
-        listDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+        listDate = berlinWallTimeToDate(year, month, day, hour, minute);
 
         // Handle a year rollover (e.g. list from Dec 31 while now is Jan 1)
         if (listDate.getTime() - nowTime > 24 * 60 * 60 * 1000) {
             year -= 1;
-            listDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+            listDate = berlinWallTimeToDate(year, month, day, hour, minute);
         }
 
         timestampStr = listDate.toISOString();
@@ -79,8 +103,9 @@ async function exec() {
         body =
             `ioBroker adapter list watchjob detected the following problem:\n\n` +
             `${errorReason}  \n` +
-            `page checked: ${LIST_URL}  \n` +
-            (listDate ? `retrieved timestamp: ${listDate.toString()}  \n` : `retrieved timestamp: (none)  \n`);
+            `page checked: ${LIST_URL}  \n${
+                listDate ? `retrieved timestamp: ${listDate.toString()}  \n` : `retrieved timestamp: (none)  \n`
+            }`;
         console.log(`\nERROR: adapter list is stale or unavailable\n`);
     } else {
         subject = `[iob-bot] OK - Adapter list up to date`;
@@ -116,9 +141,11 @@ async function exec() {
                 const telegramMessage =
                     `🚨 *ioBroker Adapter List Alert*\n\n` +
                     `${errorReason}\n\n` +
-                    `📄 Page: ${LIST_URL}\n` +
-                    (listDate ? `🕒 Retrieved timestamp: ${listDate.toISOString()}\n\n` : `🕒 Retrieved timestamp: (none)\n\n`) +
-                    `⚠️ Please check the adapter list update process.`;
+                    `📄 Page: ${LIST_URL}\n${
+                        listDate
+                            ? `🕒 Retrieved timestamp: ${listDate.toISOString()}\n\n`
+                            : `🕒 Retrieved timestamp: (none)\n\n`
+                    }⚠️ Please check the adapter list update process.`;
 
                 await sendTelegramMessage(botToken, chatId, telegramMessage);
                 console.log('Telegram notification sent successfully');
