@@ -90,7 +90,7 @@ jobs:
           password: ${{secrets.IOBBOT_GMXMAIL}}
           subject: ${{steps.getsubject.outputs.subject}}
           to: iobroker-bot@gmx.at
-          from: ioBroker Bot
+          from: 'ioBroker Bot <iobroker-bot@gmx.at>'
           ## body: Build job of ${{github.repository}} completed successfully!
           html_body: file://.checkAdapterList_body.md
           cc: github@fischer-ka.de
