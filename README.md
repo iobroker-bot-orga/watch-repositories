@@ -16,7 +16,7 @@ The check logic lives in small Node.js scripts under [`scripts/`](scripts/), and
 | --- | --- | --- | --- | --- |
 | Check Stale Repository-Files | [`checkStaleRepofiles.js`](scripts/checkStaleRepofiles.js) | `latest` and `stable` ioBroker repositories (via `@iobroker-bot-orga/iobbot-lib`) | `0 3,15 * * *` (twice daily) | 12 hours |
 | Check Stale Adapter List | [`checkStaleAdapterList.js`](scripts/checkStaleAdapterList.js) | [download.iobroker.net/list.html](https://download.iobroker.net/list.html) | `15 3 * * *` (daily) | 24 hours |
-| Check Statistics File | [`checkStatisticsFile.js`](scripts/checkStatisticsFile.js) | [iobroker.net/data/statistics.json](https://www.iobroker.net/data/statistics.json) | `45 3 * * *` (daily) | 24 hours |
+| Check Stale Statistics File | [`checkStaleStatisticsFile.js`](scripts/checkStaleStatisticsFile.js) | [iobroker.net/data/statistics.json](https://www.iobroker.net/data/statistics.json) | `45 3 * * *` (daily) | 24 hours |
 
 ### How a watch job works
 

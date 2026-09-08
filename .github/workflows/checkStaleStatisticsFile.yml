@@ -1,4 +1,4 @@
-name: Check Statistics File
+name: Check Stale Statistics File
 
 permissions:
   contents: read
@@ -49,7 +49,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  checkStatisticsFile:
+  checkStaleStatisticsFile:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -70,17 +70,17 @@ jobs:
         run: npm install --omit=dev
 
       - name: check statistics file
-        run: node scripts/checkStatisticsFile.js
+        run: node scripts/checkStaleStatisticsFile.js
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
       - name: check output files
-        run: cat .checkStatisticsFile_*.*
+        run: cat .checkStaleStatisticsFile_*.*
 
       - name: Read subject file
         id: getsubject
-        run: echo "subject=$(cat .checkStatisticsFile_subject.txt)" >> $GITHUB_OUTPUT
+        run: echo "subject=$(cat .checkStaleStatisticsFile_subject.txt)" >> $GITHUB_OUTPUT
 
       - name: Send mail
         uses: dawidd6/action-send-mail@v18
@@ -95,7 +95,7 @@ jobs:
           to: iobroker-bot@gmx.at
           from: 'ioBroker Bot <iobroker-bot@gmx.at>'
           ## body: Build job of ${{github.repository}} completed successfully!
-          html_body: file://.checkStatisticsFile_body.md
+          html_body: file://.checkStaleStatisticsFile_body.md
           cc: github@fischer-ka.de
           ## bcc: r2d2@example.com,hansolo@example.com
           ## reply_to: luke@example.com
