@@ -47,9 +47,13 @@ async function exec() {
 
         console.log(`retrieved date: ${data.date}`);
 
+        if (typeof data.date !== 'string') {
+            throw new Error(`key 'date' is not a string (${JSON.stringify(data.date)})`);
+        }
+
         listDate = new Date(data.date);
         if (isNaN(listDate.getTime())) {
-            throw new Error(`key 'date' does not contain a valid timestamp (${data.date})`);
+            throw new Error(`key 'date' is not a string parseable by Date() (${data.date})`);
         }
 
         timestampStr = listDate.toISOString();
@@ -115,7 +119,7 @@ async function exec() {
                     `📄 File: ${STATISTICS_URL}\n` +
                     (listDate ? `🕒 Retrieved timestamp: ${listDate.toISOString()}\n\n` : `🕒 Retrieved timestamp: (none)\n\n`) +
                     `⚠️ Please check the statistics file update process.\n\n` +
-                    `@bluefox37`;
+                    `@bluefox27`;
 
                 await sendTelegramMessage(botToken, chatId, telegramMessage);
                 console.log('Telegram notification sent successfully');
