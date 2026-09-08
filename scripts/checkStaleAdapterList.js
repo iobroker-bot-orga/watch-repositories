@@ -79,8 +79,9 @@ async function exec() {
         body =
             `ioBroker adapter list watchjob detected the following problem:\n\n` +
             `${errorReason}  \n` +
-            `page checked: ${LIST_URL}  \n` +
-            (listDate ? `retrieved timestamp: ${listDate.toString()}  \n` : `retrieved timestamp: (none)  \n`);
+            `page checked: ${LIST_URL}  \n${
+                listDate ? `retrieved timestamp: ${listDate.toString()}  \n` : `retrieved timestamp: (none)  \n`
+            }`;
         console.log(`\nERROR: adapter list is stale or unavailable\n`);
     } else {
         subject = `[iob-bot] OK - Adapter list is up to date`;
@@ -116,9 +117,11 @@ async function exec() {
                 const telegramMessage =
                     `🚨 *ioBroker Adapter List Alert*\n\n` +
                     `${errorReason}\n\n` +
-                    `📄 Page: ${LIST_URL}\n` +
-                    (listDate ? `🕒 Retrieved timestamp: ${listDate.toISOString()}\n\n` : `🕒 Retrieved timestamp: (none)\n\n`) +
-                    `⚠️ Please check the adapter list update process.`;
+                    `📄 Page: ${LIST_URL}\n${
+                        listDate
+                            ? `🕒 Retrieved timestamp: ${listDate.toISOString()}\n\n`
+                            : `🕒 Retrieved timestamp: (none)\n\n`
+                    }⚠️ Please check the adapter list update process.`;
 
                 await sendTelegramMessage(botToken, chatId, telegramMessage);
                 console.log('Telegram notification sent successfully');

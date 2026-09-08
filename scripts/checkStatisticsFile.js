@@ -79,8 +79,9 @@ async function exec() {
         body =
             `ioBroker statistics file watchjob detected the following problem:\n\n` +
             `${errorReason}  \n` +
-            `file checked: ${STATISTICS_URL}  \n` +
-            (listDate ? `retrieved timestamp: ${listDate.toString()}  \n` : `retrieved timestamp: (none)  \n`);
+            `file checked: ${STATISTICS_URL}  \n${
+                listDate ? `retrieved timestamp: ${listDate.toString()}  \n` : `retrieved timestamp: (none)  \n`
+            }`;
         console.log(`\nERROR: statistics file is stale or unavailable\n`);
     } else {
         subject = `[iob-bot] OK - Statistics file is up to date`;
@@ -116,9 +117,11 @@ async function exec() {
                 const telegramMessage =
                     `🚨 *ioBroker Statistics File Alert*\n\n` +
                     `${errorReason}\n\n` +
-                    `📄 File: ${STATISTICS_URL}\n` +
-                    (listDate ? `🕒 Retrieved timestamp: ${listDate.toISOString()}\n\n` : `🕒 Retrieved timestamp: (none)\n\n`) +
-                    `⚠️ Please check the statistics file update process.\n\n` +
+                    `📄 File: ${STATISTICS_URL}\n${
+                        listDate
+                            ? `🕒 Retrieved timestamp: ${listDate.toISOString()}\n\n`
+                            : `🕒 Retrieved timestamp: (none)\n\n`
+                    }⚠️ Please check the statistics file update process.\n\n` +
                     `@bluefox27`;
 
                 await sendTelegramMessage(botToken, chatId, telegramMessage);
