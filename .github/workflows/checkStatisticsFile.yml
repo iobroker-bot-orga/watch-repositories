@@ -1,5 +1,8 @@
 name: Check Statistics File
 
+permissions:
+  contents: read
+
 # This workflow checks if the ioBroker statistics file (https://www.iobroker.net/data/statistics.json)
 # is up to date and sends notifications via email and Telegram (on errors only)
 #
