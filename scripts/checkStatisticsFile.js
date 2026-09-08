@@ -45,6 +45,8 @@ async function exec() {
             throw new Error(`key 'date' could not be retrieved from statistics file`);
         }
 
+        console.log(`retrieved date: ${data.date}`);
+
         listDate = new Date(data.date);
         if (isNaN(listDate.getTime())) {
             throw new Error(`key 'date' does not contain a valid timestamp (${data.date})`);
@@ -112,7 +114,8 @@ async function exec() {
                     `${errorReason}\n\n` +
                     `📄 File: ${STATISTICS_URL}\n` +
                     (listDate ? `🕒 Retrieved timestamp: ${listDate.toISOString()}\n\n` : `🕒 Retrieved timestamp: (none)\n\n`) +
-                    `⚠️ Please check the statistics file update process.`;
+                    `⚠️ Please check the statistics file update process.\n\n` +
+                    `@bluefox37`;
 
                 await sendTelegramMessage(botToken, chatId, telegramMessage);
                 console.log('Telegram notification sent successfully');
