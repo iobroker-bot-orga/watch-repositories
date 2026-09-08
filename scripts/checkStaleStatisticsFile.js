@@ -94,13 +94,13 @@ async function exec() {
 
     body = `${body}\n` + `This mail was created by @iobroker-bot`;
 
-    fs.writeFile('.checkStatisticsFile_subject.txt', subject, err => {
+    fs.writeFile('.checkStaleStatisticsFile_subject.txt', subject, err => {
         if (err) {
             console.error(err);
         }
     });
 
-    fs.writeFile('.checkStatisticsFile_body.md', body, err => {
+    fs.writeFile('.checkStaleStatisticsFile_body.md', body, err => {
         if (err) {
             console.error(err);
         }
