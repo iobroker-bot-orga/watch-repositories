@@ -6,7 +6,7 @@
   "contributors": [
     "mcm1957 <mcm57@gmx.at>"
   ],
-  "homepage": "https://github.com/github.com/iobroker-bot-orga/watch-repositories#readme",
+  "homepage": "https://github.com/iobroker-bot-orga/watch-repositories#readme",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
     "release": "release-script"
   },
   "bugs": {
-    "url": "https://github.com/github.com/iobroker-bot-orga/watch-repositories/issues"
+    "url": "https://github.com/iobroker-bot-orga/watch-repositories/issues"
   },
   "readmeFilename": "README.md"
 }
