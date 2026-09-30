@@ -135,12 +135,12 @@ async function exec() {
                 const telegramLines = [`⚠️ *ioBroker Stable Tags Alert*\n`];
 
                 if (updates.length > 0) {
-                    telegramLines.push(`The following adapters need a stable dist\\-tag update:\n`);
+                    telegramLines.push(`The following adapters need a stable dist-tag update:\n`);
                     for (const { adapter, repoVersion, npmStable } of updates) {
-                        telegramLines.push(`📦 *iobroker\\.${adapter}*`);
+                        telegramLines.push(`📦 *iobroker.${adapter}*`);
                         telegramLines.push(`repo: \`${repoVersion}\` → npm stable: \`${npmStable}\``);
                         telegramLines.push(`Command:`);
-                        telegramLines.push(`\`npm dist\\-tag add iobroker\\.${adapter}@${repoVersion} stable\``);
+                        telegramLines.push(`\`npm dist-tag add iobroker.${adapter}@${repoVersion} stable\``);
                         telegramLines.push('');
                     }
                 }
@@ -148,7 +148,7 @@ async function exec() {
                 if (errors.length > 0) {
                     telegramLines.push(`Errors:`);
                     for (const { adapter, error } of errors) {
-                        telegramLines.push(`❌ iobroker\\.${adapter}: ${error}`);
+                        telegramLines.push(`❌ iobroker.${adapter}: ${error}`);
                     }
                 }
 
