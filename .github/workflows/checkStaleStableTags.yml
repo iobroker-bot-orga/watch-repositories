@@ -1,0 +1,101 @@
+name: Check Stale Stable Tags
+
+permissions:
+  contents: read
+
+# This workflow checks whether the npm stable dist-tags of selected ioBroker
+# adapter packages match the versions listed in sources-dist-stable.json.
+# If any adapter needs a dist-tag update, email and Telegram notifications are
+# sent containing ready-to-run npm dist-tag commands for copy-and-paste execution.
+# No npm commands are executed by the workflow itself.
+#
+# === TELEGRAM BOT SETUP INSTRUCTIONS ===
+# To receive Telegram notifications when dist-tags are outdated:
+#
+# 1. Create a Telegram Bot:
+#    - Open Telegram and search for @BotFather
+#    - Send /newbot command
+#    - Follow instructions to create your bot
+#    - Save the bot token (format: 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11)
+#
+# 2. Create or Use Existing Telegram Group:
+#    - Create a group named "ioBroker Repositories-Core" or use existing one
+#    - Add your bot to this group as a member
+#
+# 3. Get the Chat ID:
+#    - Add @RawDataBot to your group temporarily
+#    - The bot will send you the chat ID (format: -1001234567890 for groups)
+#    - Remove @RawDataBot from the group after getting the ID
+#    - Alternative: Send a message in the group, then visit:
+#      https://api.telegram.org/bot<YourBOTToken>/getUpdates
+#      Look for "chat":{"id":-1001234567890,...
+#
+# 4. Add Secrets to GitHub Repository:
+#    - Go to GitHub repository Settings > Secrets and variables > Actions
+#    - Add new repository secret: TELEGRAM_BOT_TOKEN with your bot token
+#    - Add new repository secret: TELEGRAM_CHAT_ID with your chat ID
+#
+# 5. Test the Setup:
+#    - Manually trigger this workflow from the Actions tab
+#    - Check if the bot sends a message to your group when a dist-tag is outdated
+#
+# Note: Email and Telegram messages are sent ONLY when a dist-tag update is required.
+# No messages are sent when all dist-tags are correct.
+
+on:
+  schedule:
+    - cron: "0 10 * * *"
+
+  workflow_dispatch:
+
+jobs:
+  checkStaleStableTags:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+
+      - name: setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+
+      - name: cache node modules
+        uses: actions/cache@v6
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-js-${{ hashFiles('package-lock.json') }}
+
+      - name: install dependencies
+        run: npm install --omit=dev
+
+      - name: check stable dist-tags
+        run: node scripts/checkStaleStableTags.js
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      - name: check output files
+        run: cat .checkStaleStableTags_subject.txt .checkStaleStableTags_body.md
+
+      - name: Read subject file
+        id: getsubject
+        if: hashFiles('.checkStaleStableTags_needs_update') != ''
+        run: echo "subject=$(cat .checkStaleStableTags_subject.txt)" >> $GITHUB_OUTPUT
+
+      - name: Send mail
+        if: hashFiles('.checkStaleStableTags_needs_update') != ''
+        uses: dawidd6/action-send-mail@v18
+        with:
+          # for documentation see https://github.com/marketplace/actions/send-email
+          server_address: mail.gmx.net
+          server_port: 465
+          secure: true
+          username: iobroker-bot@gmx.at
+          password: ${{secrets.IOBBOT_GMXMAIL}}
+          subject: ${{steps.getsubject.outputs.subject}}
+          to: iobroker-bot@gmx.at
+          from: 'ioBroker Bot <iobroker-bot@gmx.at>'
+          html_body: file://.checkStaleStableTags_body.md
+          cc: github@fischer-ka.de
+          convert_markdown: true
