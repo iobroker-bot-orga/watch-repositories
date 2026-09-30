@@ -152,8 +152,6 @@ async function exec() {
                     }
                 }
 
-                telegramLines.push(`@bluefox27`);
-
                 await sendTelegramMessage(botToken, chatId, telegramLines.join('\n'));
                 console.log('Telegram notification sent successfully');
             } catch (error) {
