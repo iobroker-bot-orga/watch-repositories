@@ -17,6 +17,7 @@ The check logic lives in small Node.js scripts under [`scripts/`](scripts/), and
 | Check Stale Repository-Files | [`checkStaleRepofiles.js`](scripts/checkStaleRepofiles.js) | `latest` and `stable` ioBroker repositories (via `@iobroker-bot-orga/iobbot-lib`) | `0 3,15 * * *` (twice daily) | 12 hours |
 | Check Stale Adapter List | [`checkStaleAdapterList.js`](scripts/checkStaleAdapterList.js) | [download.iobroker.net/list.html](https://download.iobroker.net/list.html) | `15 3 * * *` (daily) | 24 hours |
 | Check Stale Statistics File | [`checkStaleStatisticsFile.js`](scripts/checkStaleStatisticsFile.js) | [iobroker.net/data/statistics.json](https://www.iobroker.net/data/statistics.json) | `45 3 * * *` (daily) | 24 hours |
+| Check Stale Stable Tags | [`checkStaleStableTags.js`](scripts/checkStaleStableTags.js) | npm stable dist-tags for `admin`, `discovery`, `js-controller`, `backitup` vs. [sources-dist-stable.json](https://raw.githubusercontent.com/ioBroker/ioBroker.repositories/master/sources-dist-stable.json) | `0 10 * * *` (daily) | dist-tag must match repo version |
 
 ### How a watch job works
 
@@ -30,6 +31,8 @@ Each watch job follows the same pattern:
    - A **Telegram message** is sent **only on error**, so a silent inbox means everything is healthy.
 
 The shared helper [`sendTelegramMessage.js`](scripts/sendTelegramMessage.js) posts the alert to the configured Telegram chat.
+
+> **Exception — Check Stale Stable Tags:** this job compares npm stable dist-tags against `sources-dist-stable.json` and sends both the email and the Telegram message **only when an update is required**. The notification includes a ready-to-run `npm dist-tag add …` command for each affected adapter. No npm commands are executed by the workflow.
 
 ## Supporting workflow
 
