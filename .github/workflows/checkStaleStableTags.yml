@@ -85,7 +85,7 @@ jobs:
 
       - name: Send mail
         if: hashFiles('.checkStaleStableTags_needs_update') != ''
-        uses: dawidd6/action-send-mail@v18
+        uses: dawidd6/action-send-mail@v22
         with:
           # for documentation see https://github.com/marketplace/actions/send-email
           server_address: mail.gmx.net
