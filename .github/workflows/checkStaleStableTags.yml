@@ -21,9 +21,11 @@ permissions:
 #   TELEGRAM_BOT_TOKEN — Telegram bot token
 #   TELEGRAM_CHAT_ID   — Telegram chat/group ID
 #
-# npm authentication uses trusted publishing (OIDC). The target npm packages
-# must have this GitHub repository registered as a trusted publisher on
-# registry.npmjs.org — no NPM_TOKEN secret is required.
+# npm authentication uses trusted publishing (OIDC) via actions/setup-node
+# with registry-url. npm ≥ 11.5.1 handles the OIDC token exchange natively —
+# no NPM_TOKEN secret and no manual token fetch is required. The target npm
+# packages must have this GitHub repository registered as a trusted publisher
+# on registry.npmjs.org.
 #
 # === TELEGRAM BOT SETUP INSTRUCTIONS ===
 # To receive Telegram notifications when dist-tags are outdated:
@@ -72,6 +74,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '24.x'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
 
       - name: cache node modules
         uses: actions/cache@v6
@@ -81,14 +85,6 @@ jobs:
 
       - name: install dependencies
         run: npm install --omit=dev
-
-      - name: authenticate with npm registry via trusted publishing
-        run: |
-          OIDC_TOKEN=$(curl --silent \
-            -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
-            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=https://registry.npmjs.org" | \
-            jq -r '.value')
-          echo "//registry.npmjs.org/:_authToken=${OIDC_TOKEN}" >> ~/.npmrc
 
       - name: check and update stable dist-tags
         run: node scripts/checkStaleStableTags.js
