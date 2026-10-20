@@ -22,10 +22,11 @@ permissions:
 #   TELEGRAM_CHAT_ID   — Telegram chat/group ID
 #
 # npm authentication uses trusted publishing (OIDC) via actions/setup-node
-# with registry-url. npm ≥ 11.5.1 handles the OIDC token exchange natively —
-# no NPM_TOKEN secret and no manual token fetch is required. The target npm
+# with registry-url. npm ≥ 11.21.0 / 12.2.0 is required — earlier versions
+# do not support dist-tag add via trusted publishing (npm/cli#8547).
+# No NPM_TOKEN secret and no manual token fetch is required. The target npm
 # packages must have this GitHub repository registered as a trusted publisher
-# on registry.npmjs.org.
+# on registry.npmjs.org, with dist-tag manipulation explicitly enabled.
 #
 # === TELEGRAM BOT SETUP INSTRUCTIONS ===
 # To receive Telegram notifications when dist-tags are outdated:
@@ -74,8 +75,13 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '24.x'
-          # registry-url: 'https://registry.npmjs.org'
-          # package-manager-cache: false
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
+
+      - name: update npm
+        # dist-tag add via trusted publishing requires npm >= 11.21.0 / 12.2.0
+        # see https://github.com/npm/cli/issues/8547
+        run: npm install -g npm@latest
 
       - name: cache node modules
         uses: actions/cache@v6
