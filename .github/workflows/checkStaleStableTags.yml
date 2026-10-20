@@ -5,9 +5,19 @@ permissions:
 
 # This workflow checks whether the npm stable dist-tags of selected ioBroker
 # adapter packages match the versions listed in sources-dist-stable.json.
-# If any adapter needs a dist-tag update, email and Telegram notifications are
-# sent containing ready-to-run npm dist-tag commands for copy-and-paste execution.
-# No npm commands are executed by the workflow itself.
+# If any adapter needs a dist-tag update, the workflow runs the corresponding
+# npm dist-tag command automatically. After a 2-minute propagation wait it
+# rechecks each tag and reports the outcome via email and Telegram:
+#   - success: tag was updated and verified
+#   - command_failed: npm command failed (manual fallback command included)
+#   - recheck_failed: npm command ran but tag still incorrect after 2 min
+# Email and Telegram are sent ONLY when at least one dist-tag needed updating.
+#
+# Required secrets:
+#   NPM_TOKEN          — npm token with dist-tag write permission
+#   IOBBOT_GMXMAIL     — GMX password for notification email
+#   TELEGRAM_BOT_TOKEN — Telegram bot token
+#   TELEGRAM_CHAT_ID   — Telegram chat/group ID
 #
 # === TELEGRAM BOT SETUP INSTRUCTIONS ===
 # To receive Telegram notifications when dist-tags are outdated:
@@ -38,9 +48,6 @@ permissions:
 # 5. Test the Setup:
 #    - Manually trigger this workflow from the Actions tab
 #    - Check if the bot sends a message to your group when a dist-tag is outdated
-#
-# Note: Email and Telegram messages are sent ONLY when a dist-tag update is required.
-# No messages are sent when all dist-tags are correct.
 
 on:
   schedule:
@@ -59,6 +66,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '24.x'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: cache node modules
         uses: actions/cache@v6
@@ -69,11 +77,13 @@ jobs:
       - name: install dependencies
         run: npm install --omit=dev
 
-      - name: check stable dist-tags
+      - name: check and update stable dist-tags
         run: node scripts/checkStaleStableTags.js
         env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/actions/workflows/checkStaleStableTags.yml
 
       - name: check output files
         run: cat .checkStaleStableTags_subject.txt .checkStaleStableTags_body.md
