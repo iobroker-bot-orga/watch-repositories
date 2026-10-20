@@ -74,8 +74,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '24.x'
-          registry-url: 'https://registry.npmjs.org'
-          package-manager-cache: false
+          # registry-url: 'https://registry.npmjs.org'
+          # package-manager-cache: false
 
       - name: cache node modules
         uses: actions/cache@v6
