@@ -275,14 +275,15 @@ async function exec() {
             }
 
             if (commandFailedItems.length > 0) {
-                telegramLines.push(`npm command failed (manual action required):`);
+                telegramLines.push(`The following adapters need a stable dist-tag update:\n`);
                 for (const { adapter, repoVersion, oldNpmStable } of commandFailedItems) {
-                    telegramLines.push(
-                        `❌ *iobroker.${adapter}*: repo=\`${repoVersion}\`, npm stable=\`${oldNpmStable}\``,
-                    );
-                    telegramLines.push(`Manual: \`npm dist-tag add iobroker.${adapter}@${repoVersion} stable\``);
+                    telegramLines.push(`📦 *iobroker.${adapter}*`);
+                    telegramLines.push(`repo: \`${repoVersion}\` → npm stable: \`${oldNpmStable}\``);
+                    telegramLines.push(`npm command failed (manual action is required)\n`);
+                    telegramLines.push(`Command:`);
+                    telegramLines.push(`\`npm dist-tag add iobroker.${adapter}@${repoVersion} stable\``);
+                    telegramLines.push('');
                 }
-                telegramLines.push('');
             }
 
             if (recheckFailedItems.length > 0) {
