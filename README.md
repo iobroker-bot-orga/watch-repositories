@@ -32,7 +32,7 @@ Each watch job follows the same pattern:
 
 The shared helper [`sendTelegramMessage.js`](scripts/sendTelegramMessage.js) posts the alert to the configured Telegram chat.
 
-> **Exception — Check Stale Stable Tags:** this job compares npm stable dist-tags against `sources-dist-stable.json` and **automatically runs `npm dist-tag add …`** for each adapter that is out of date. After a 2-minute propagation wait it rechecks every updated tag and reports the outcome. Both the email and the Telegram message are sent **only when at least one dist-tag needed updating**, and the notification distinguishes three outcomes: *success* (tag verified), *command failed* (includes the manual fallback command), and *still incorrect after 2 min*.
+> **Exception — Check Stale Stable Tags:** this job compares npm stable dist-tags against `sources-dist-stable.json` and **automatically runs `npm dist-tag add …`** for each adapter that is out of date (authenticated via npm trusted publishing / OIDC — no stored `NPM_TOKEN` secret required). After a 2-minute propagation wait it rechecks every updated tag and reports the outcome. Both the email and the Telegram message are sent **only when at least one dist-tag needed updating**, and the notification distinguishes three outcomes: *success* (tag verified), *command failed* (includes the manual fallback command), and *still incorrect after 2 min*.
 
 ## Supporting workflow
 
@@ -66,7 +66,6 @@ Configure these under **Settings → Secrets and variables → Actions**:
 | `IOBBOT_GMXMAIL` | Password for the GMX account that sends the notification emails. |
 | `TELEGRAM_BOT_TOKEN` | Token of the Telegram bot that posts error alerts. |
 | `TELEGRAM_CHAT_ID` | ID of the Telegram group/chat that receives the alerts. |
-| `NPM_TOKEN` | npm token with dist-tag write permission, used by the Check Stale Stable Tags job to correct outdated stable dist-tags automatically. |
 | `IOBBOT_GITHUB_TOKEN` | Token used by the keep-alive workflow to push commits. |
 
 ### Setting up Telegram notifications
